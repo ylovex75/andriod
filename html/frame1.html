@@ -1,0 +1,427 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/base1.css">
+    <link rel="stylesheet" href="../css/zhibo.css">
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+   <link rel="stylesheet" type="text/css" href="../css/myui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <style type="text/css">
+        	.STYLE1 {
+    	color: #FFFFFF;
+    	font-weight: bold;
+    	font-size: 16px;
+    }
+        </style>
+    </head>
+    <body style="background-color:#fff">
+
+
+       <table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="FF5B5C" bgcolor="#FFFFFF">
+      <tr>
+        <td bgcolor="#ffffff"><iframe src="http://azb.me/lunfan/2.html" width="100%" height=130 marginheight="0" marginwidth="0" frameborder="0" scrolling="no"></iframe></td>
+      </tr>
+      <!--<tr>
+        <td bgcolor="#000"><div align="center"><span class="STYLE1">&nbsp;&nbsp;灰码演示APP视频介绍（点击即可播放）</span></div></td>
+      </tr>
+      <tr>-->
+        <!--<td><video width="100%" src="https://cloud.video.taobao.com//play/u/256126368/p/1/e/6/t/1/218390518417.mp4" controls="controls" autoplay="autoplay" loop="loop" poster="https://img.alicdn.com/imgextra/i3/256126368/O1CN01g4JN3D1wuad8R8I8n_!!256126368.jpg">
+    视频
+    </video></td>-->
+      </tr>
+    </table>
+
+
+
+
+
+
+
+                      <div class="wrap">
+                        <!-- 游戏 -->
+                        <div class="game-page-zhubo">
+
+                          <!-- 视频列表 -->
+                        <div class="game-list-wrap-zhubo" id="liveList">
+                          <ul class="clearfix" id="div_list">
+
+
+
+                            <!--加载提示-->
+                            <section class="m-noRecord"><div class="c-icon-noRecord"></div> <div class="c-info">平台加载中...</div></section>
+                            <!--加载提示-->
+
+
+                          </ul>
+                        </div>
+                        <!-- 视频列表 end-->
+
+                        </div>
+                        <!-- 游戏 end-->
+                      </div>
+
+
+
+</body>
+<script type="text/x-dot-template" id="template">
+{{~ it.data : value : index }}
+
+
+
+    <li>
+      <div class="aui-row" onclick="openWin('{{= value. latform_type }}','{{= value.img }}','{{= value. title }}','{{= value. result }}')">
+
+
+
+          <i class="aui-iconfont">  <img src="{{= value.img }}"></i></br>
+          <em class="aui-group-three" style=" font-size: 15px; "> {{= value. title }}</em>
+          </br>
+           <div class="aui-grid-label" style=" font-size: 13px; ">在线主播:{{= value. number }}位</div>
+
+        <br>
+      </div>
+    </li>
+
+/*
+<li  onclick="openWin('{{= value. url }}')">
+  <div class="game-a" >
+    <img src="{{= value. img }}" alt="">
+      <em class="aui-group-three" style=" font-size: 12px; "> {{= value. title }}</em>
+    <p>
+        <em class="aui-group-one" style=" font-size: 12px; ">主播：</em> <em class="aui-group-two" style=" font-size: 12px; ">{{= value. nickname }}</em>
+    </p><br>
+  </div>
+</li>
+
+*/
+
+
+{{~}}
+</script>
+<script type="text/javascript" src="../script/api7.js"></script>
+<script type="text/javascript" src="../script/doT7.js"></script>
+<script type="text/javascript" src="../script/auipullrefresh7.js"></script>
+<script type="text/javascript" src="../script/auislide7.js"></script>
+<script type="text/javascript" src="../script/auilazyload7.js" ></script>
+<script type="text/javascript">
+  var imgdz = '';
+
+  var api_url = localStorage.getItem('api_url');
+  apiready = function(){
+    getBanner();
+    getNav();
+
+
+    api.parseTapmode();
+    api.ajax({
+        url: api_url+'/login/login/imgad.html',
+        method: 'get'
+    },function(ret, err){
+        if (ret) {
+          //alert( JSON.stringify( ret ) );
+          localStorage.setItem('fxpic1',ret.msg.fxpic1);
+          localStorage.setItem('fxurl1',ret.msg.fxurl1);
+          localStorage.setItem('fxpic2',ret.msg.fxpic2);
+          localStorage.setItem('fxurl2',ret.msg.fxurl2);
+          var bpic = $api.byId('bpic');
+
+        } else {
+
+        }
+    });
+
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/refresh.png',
+        bgColor: '#fff',
+        textColor: '#333',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err){
+      if (err) {
+        api.toast({
+            msg: '加载数据失败',
+            duration: 2000,
+            location: 'middle'
+        });
+        api.refreshHeaderLoadDone();
+      }else {
+        getNav();
+        getBanner();
+        banNer();
+        api.toast({
+            msg: '刷新成功',
+            duration: 1000,
+            location: 'middle'
+        });
+        api.refreshHeaderLoadDone();
+
+      }
+    });
+
+    api.ajax({
+        url: 'http://azb.me/api.html',
+        method: 'get'
+    },function(ret, err){
+        if (ret) {
+          api.hideProgress();
+          pingtai(ret.msg[0].pingtai);
+        } else {
+          api.hideProgress();
+        }
+    });
+  }
+
+  function pingtai(pingtai){
+    //alert(pingtai);
+    var div_list = $api.byId('div_list');
+    var template = $api.byId('template');
+    api.ajax({
+        url: pingtai,
+        data:{
+        }
+    },function(ret, err){
+        if (ret) {
+          //alert( JSON.stringify( ret ) );
+          var pagefn = doT.template(template.text);
+          div_list.innerHTML = pagefn(ret);
+          //alert( pagefn(ret));
+          api.hideProgress();
+        } else {
+          api.hideProgress();
+            //alert( JSON.stringify( err ) );
+        }
+    });
+  }
+
+
+  function imgUrl(url){
+    api.openWin({
+        name: 'h5',
+        url: './h5.html',
+        pageParam: {
+            url: url
+        }
+    });
+  }
+
+
+
+  function playRadio(){
+    api.hideProgress();
+  }
+
+
+
+  //访问轮播地址
+  function toBanner(url){
+
+    if (url == '') {
+
+    }else {
+      api.openWin({
+          name: 'h5',
+          url: './h5.html',
+          pageParam: {
+              url: url
+          }
+      });
+    }
+  }
+
+  //菜单导航获取
+  function getBanner(){
+    var bannerid = $api.byId('slidebox');
+    var bannertpl = $api.byId('bannertpl');
+
+    api.ajax({
+        url: api_url+'/login/login/banben.html',
+        method: 'get'
+    },function(ret, err){
+        if (ret) {
+          localStorage.setItem('user_advert',ret.advert2);
+          var advert = $api.byId('gonggao');
+          advert.innerHTML = localStorage.getItem('user_advert');
+            localStorage.setItem('jx_url1',ret.banben);
+            localStorage.setItem('jx_url2',ret.url);
+            localStorage.setItem('jx_url3',ret.url2);
+            localStorage.setItem('jx_url4',ret.url3);
+            localStorage.setItem('jx_url5',ret.url4);
+            localStorage.setItem('jx_url6',ret.url5);
+            localStorage.setItem('hburl',ret.hburl);
+        } else {
+            //alert( JSON.stringify( err ) );
+        }
+    });
+
+    api.ajax({
+        url: api_url+'/app/nav',
+        method: 'get',
+    },function(ret, err){
+        if (ret) {
+          //渲染模板
+          var pagefn = doT.template(bannertpl.text);
+          bannerid.innerHTML = pagefn(ret.bhbanner);
+//      alert( JSON.stringify( ret.banner ) );
+          banNer();
+
+        } else {
+            alert( '网络错误' );
+            api.hideProgress();
+        }
+    });
+  }
+
+
+  //轮播图获取
+  function getNav(){
+    var navid = $api.byId('div_list_f');
+    var navtpl = $api.byId('navcattpl');
+	  var navtjid = $api.byId('div_list');
+    var navtjtpl = $api.byId('navtjtpl');
+	  var lrid = $api.byId('lrbox');
+    var lrtpl = $api.byId('lrtpl');
+
+
+
+    var wztid = $api.byId('wzbox_top');
+    var wzttpl = $api.byId('wzttpl');
+    var wzbid = $api.byId('wzbox_bottom');
+    var wzbtpl = $api.byId('wzbtpl');
+    var lrbid = $api.byId('lrbbox');
+    var lrbtpl = $api.byId('lrbtpl');
+    api.ajax({
+        url: api_url+'/app/nav',
+        method: 'get',
+    },function(ret, err){
+        if (ret) {
+          //渲染模板
+
+
+
+        } else {
+            alert( '网络错误' );
+            api.hideProgress();
+        }
+    });
+  }
+
+
+  //幻灯轮播图
+  function banNer(){
+    var slide = new auiSlide({
+        container:document.getElementById("aui-slide"),
+        // "width":300,
+        "height":150,
+        "speed":300,
+        "pageShow":true,
+        "autoPlay": 5000,
+        "pageStyle":'dot',
+        "loop":true,
+        'dotPosition':'center',
+    });
+  }
+
+  new auiLazyload({
+      errorImage:'../image/error-img.jpg'
+  });
+
+
+
+  function openurl(url) {
+     api.openApp({
+     androidPkg : 'android.intent.action.VIEW',
+     mimeType : 'text/html',
+     uri : url,
+     }, function(ret, err) {
+      var msg = JSON.stringify(ret);
+      api.openApp({
+      iosUrl: url
+    });
+    });
+ }
+
+ //////////////////////   打开接口方法  方法    girlxiezhenList     S //////////////////////
+ function gruly_zb1(){
+ 	var delay = 0;
+ 	api.openWin({
+    name: 'gruly_b1',
+    url: 'gruly_b1.html',
+ 			bounces:false,
+ 			delay: delay,
+ 			slidBackEnabled:true,
+ 			vScrollBarEnabled:false,
+ 	});
+ }
+ //////////////////////   打开接口方法  方法    girlxiezhenList     E //////////////////////
+
+ //////////////////////   打开接口方法  方法    girlxiezhenList     S //////////////////////
+ function gruly_zb2(){
+   var delay = 0;
+   api.openWin({
+     name: 'gruly_b2',
+     url: 'gruly_b2.html',
+       bounces:false,
+       delay: delay,
+       slidBackEnabled:true,
+       vScrollBarEnabled:false,
+   });
+ }
+ //////////////////////   打开接口方法  方法    girlxiezhenList     E //////////////////////
+
+ //////////////////////   打开接口方法  方法    girlxiezhenList     S //////////////////////
+ function gruly_zb3(){
+   var delay = 0;
+   api.openWin({
+     name: 'gruly_b3',
+     url: 'gruly_b3.html',
+       bounces:false,
+       delay: delay,
+       slidBackEnabled:true,
+       vScrollBarEnabled:false,
+   });
+ }
+ //////////////////////   打开接口方法  方法    girlxiezhenList     E //////////////////////
+
+ //////////////////////   打开接口方法  方法    girlxiezhenList     S //////////////////////
+ function gruly_zb4(){
+   var delay = 0;
+   api.openWin({
+     name: 'gruly_b4',
+     url: 'gruly_b4.html',
+       bounces:false,
+       delay: delay,
+       slidBackEnabled:true,
+       vScrollBarEnabled:false,
+   });
+ }
+ //////////////////////   打开接口方法  方法    girlxiezhenList     E //////////////////////
+
+ function openWin(url,xinimg,title){
+
+     api.openWin({
+     name: 'bzhibo_app',
+     pageParam:{
+     url: url,
+     xinimg:xinimg,
+     title:title
+
+     },
+         url: 'bzhibo_app.html',
+
+     });
+
+ }
+
+
+
+</script>
+</html>
